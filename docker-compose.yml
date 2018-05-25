@@ -1,0 +1,87 @@
+version: "2"
+services:
+
+  rtview-dataserver-sp:
+    # replace username/repo:tag with your name and image details
+    image: grahamea/test2:latest
+    # EXPOSE 3279 3278 3276 3275 3272 3270 3269 3268 3267 3266 3261
+    ports:
+      - "3270:3270"  
+      - "3278" 
+      - "3276" 
+      - "3275" 
+      - "3272" 
+      - "3268" 
+      - "3267" 
+      - "3266"
+    labels:
+      # Expose this service when using kompose, on OpenShift create a route
+      kompose.service.expose: "true"
+    networks:
+      - rtview
+    volumes:
+      - project:/opt/RTViewDataServerSP/projects/my-sample-server
+      - cache:/opt/RTViewDataServerSP/projects/my-sample-server/cache
+      - logs:/opt/RTViewDataServerSP/projects/my-sample-server/logs
+      - ext:/opt/RTViewDataServerSP/projects/ext
+    environment:
+      DATASERVER_CMD_ARGS: -echo -verbose
+      RTV_HISTORY_DB: rtview-history-db:3306/RTVHISTORY
+      RTV_CONFIG_DB: rtview-config-db:3306/RTVCONFIG
+      HISTORIAN_DATACLIENT: //rtview-dataserver-sp:3278
+
+  rtview-historian:
+    # replace username/repo:tag with your name and image details
+    image: grahamea/test3:latest
+    ports:
+      - "3276"
+    networks: 
+      - rtview
+    environment:
+      HISTORIAN_CMD_ARGS: -echo -verbose -verbose2
+      RTV_HISTORY_DB: rtview-history-db:3306/RTVHISTORY
+      HISTORIAN_DATACLIENT: //rtview-dataserver-sp:3278
+
+  rtview-history-db:
+    image: registry.access.redhat.com/rhscl/mysql-57-rhel7:latest
+    ports:
+      - "3306"
+    networks:
+       - rtview
+    volumes:
+      - history-db-data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: RTVHISTORY
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: my-secret-pw
+
+  rtview-config-db:
+    # image: registry.access.redhat.com/rhscl/mysql-57-rhel7:latest
+    # image: em-db-mysql-57:latest
+    image: grahamea/test4:latest
+    ports:
+      - "3306"
+    networks:
+      - rtview
+    volumes:
+      - config-db-data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: RTVCONFIG
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: my-secret-pw
+
+networks:
+  rtview:
+
+volumes:
+  project:
+  cache:
+  logs:
+  ext:
+  history-db-data:
+  config-db-data:
+  
