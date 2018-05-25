@@ -7,7 +7,9 @@ Kompose test docker-compose file
 https://github.com/kubernetes/kompose/blob/master/docs/installation.md
 
 e.g. on learn.openshift.com
+
 sudo yum install epel-release
+
 sudo yum -y install kompose
 
 
