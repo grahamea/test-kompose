@@ -3,6 +3,9 @@ Kompose test docker-compose file
 
 ## Example instructions 
 
+### Get this repo or download the docker-compose file
+wget https://raw.githubusercontent.com/grahamea/test-kompose/master/docker-compose.yml
+
 ### Create a project
 oc new-project rtview-dataserver-sp
 
