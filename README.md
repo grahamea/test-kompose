@@ -26,7 +26,7 @@ kompose --provider openshift up
 oc get dc,svc,is,pvc,routes
 
 ### Force a restart of rtview-dataserver-spvy updating a deployment config 
-oc set-env dc/rtview-dataserver-sp RESTART=1
+oc set env dc/rtview-dataserver-sp RESTART=1
 
 ### Bring down (and remove) our configuration 
 kompose --provider openshift down
