@@ -3,6 +3,14 @@ Kompose test docker-compose file
 
 ## Example instructions 
 
+### Install kompose on your system
+https://github.com/kubernetes/kompose/blob/master/docs/installation.md
+
+e.g. on learn.openshift.com
+sudo yum install epel-release
+sudo yum -y install kompose
+
+
 ### Get this repo or download the docker-compose file
 wget https://raw.githubusercontent.com/grahamea/test-kompose/master/docker-compose.yml
 
