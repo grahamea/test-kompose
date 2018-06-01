@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rtview-dataserver-sp
+  name: rtview-dataserver-sp
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: rtview-dataserver-sp
+          servicePort: 3270
+status:
+  loadBalancer: {}

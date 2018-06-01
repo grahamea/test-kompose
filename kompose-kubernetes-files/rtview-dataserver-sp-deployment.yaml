@@ -1,0 +1,67 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --provider kubernetes --file ..\docker-compose.yml
+    kompose.service.expose: "true"
+    kompose.version: 1.13.0 (84fa826)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rtview-dataserver-sp
+  name: rtview-dataserver-sp
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: rtview-dataserver-sp
+    spec:
+      containers:
+      - env:
+        - name: DATASERVER_CMD_ARGS
+          value: -echo -verbose
+        - name: HISTORIAN_DATACLIENT
+          value: //rtview-dataserver-sp:3278
+        - name: RTV_CONFIG_DB
+          value: rtview-config-db:3306/RTVCONFIG
+        - name: RTV_HISTORY_DB
+          value: rtview-history-db:3306/RTVHISTORY
+        image: grahamea/test2:latest
+        name: rtview-dataserver-sp
+        ports:
+        - containerPort: 3270
+        - containerPort: 3278
+        - containerPort: 3276
+        - containerPort: 3275
+        - containerPort: 3272
+        - containerPort: 3268
+        - containerPort: 3267
+        - containerPort: 3266
+        resources: {}
+        volumeMounts:
+        - mountPath: /opt/RTViewDataServerSP/projects/my-sample-server
+          name: project
+        - mountPath: /opt/RTViewDataServerSP/projects/my-sample-server/cache
+          name: cache
+        - mountPath: /opt/RTViewDataServerSP/projects/my-sample-server/logs
+          name: logs
+        - mountPath: /opt/RTViewDataServerSP/projects/ext
+          name: ext
+      restartPolicy: Always
+      volumes:
+      - name: project
+        persistentVolumeClaim:
+          claimName: project
+      - name: cache
+        persistentVolumeClaim:
+          claimName: cache
+      - name: logs
+        persistentVolumeClaim:
+          claimName: logs
+      - name: ext
+        persistentVolumeClaim:
+          claimName: ext
+status: {}

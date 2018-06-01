@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --provider kubernetes --file ..\docker-compose.yml
+    kompose.version: 1.13.0 (84fa826)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rtview-history-db
+  name: rtview-history-db
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: rtview-history-db
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: RTVHISTORY
+        - name: MYSQL_PASSWORD
+          value: my-secret-pw
+        - name: MYSQL_ROOT_PASSWORD
+          value: my-secret-pw
+        - name: MYSQL_USER
+          value: mysql
+        image: registry.access.redhat.com/rhscl/mysql-57-rhel7:latest
+        name: rtview-history-db
+        ports:
+        - containerPort: 3306
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: history-db-data
+      restartPolicy: Always
+      volumes:
+      - name: history-db-data
+        persistentVolumeClaim:
+          claimName: history-db-data
+status: {}
