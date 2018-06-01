@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ImageStream
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rtview-config-db
+  name: rtview-config-db
+spec:
+  tags:
+  - annotations: null
+    from:
+      kind: DockerImage
+      name: grahamea/test4:latest
+    generation: null
+    importPolicy: {}
+    name: latest
+status:
+  dockerImageRepository: ""

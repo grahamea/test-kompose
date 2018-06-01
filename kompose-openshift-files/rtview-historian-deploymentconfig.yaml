@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --provider openshift --file ..\docker-compose.yml
+    kompose.version: 1.13.0 (84fa826)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rtview-historian
+  name: rtview-historian
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: rtview-historian
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: rtview-historian
+    spec:
+      containers:
+      - env:
+        - name: HISTORIAN_CMD_ARGS
+          value: -echo -verbose -verbose2
+        - name: HISTORIAN_DATACLIENT
+          value: //rtview-dataserver-sp:3278
+        - name: RTV_HISTORY_DB
+          value: rtview-history-db:3306/RTVHISTORY
+        image: ' '
+        name: rtview-historian
+        ports:
+        - containerPort: 3276
+        resources: {}
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - rtview-historian
+      from:
+        kind: ImageStreamTag
+        name: rtview-historian:latest
+    type: ImageChange
+status: {}

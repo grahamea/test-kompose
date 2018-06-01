@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --provider openshift --file ..\docker-compose.yml
+    kompose.service.expose: "true"
+    kompose.version: 1.13.0 (84fa826)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rtview-dataserver-sp
+  name: rtview-dataserver-sp
+spec:
+  ports:
+  - name: "3270"
+    port: 3270
+    targetPort: 3270
+  - name: "3278"
+    port: 3278
+    targetPort: 3278
+  - name: "3276"
+    port: 3276
+    targetPort: 3276
+  - name: "3275"
+    port: 3275
+    targetPort: 3275
+  - name: "3272"
+    port: 3272
+    targetPort: 3272
+  - name: "3268"
+    port: 3268
+    targetPort: 3268
+  - name: "3267"
+    port: 3267
+    targetPort: 3267
+  - name: "3266"
+    port: 3266
+    targetPort: 3266
+  selector:
+    io.kompose.service: rtview-dataserver-sp
+status:
+  loadBalancer: {}

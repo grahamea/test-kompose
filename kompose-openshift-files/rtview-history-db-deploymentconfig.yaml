@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --provider openshift --file ..\docker-compose.yml
+    kompose.version: 1.13.0 (84fa826)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rtview-history-db
+  name: rtview-history-db
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: rtview-history-db
+  strategy:
+    resources: {}
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: rtview-history-db
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: RTVHISTORY
+        - name: MYSQL_PASSWORD
+          value: my-secret-pw
+        - name: MYSQL_ROOT_PASSWORD
+          value: my-secret-pw
+        - name: MYSQL_USER
+          value: mysql
+        image: ' '
+        name: rtview-history-db
+        ports:
+        - containerPort: 3306
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: history-db-data
+      restartPolicy: Always
+      volumes:
+      - name: history-db-data
+        persistentVolumeClaim:
+          claimName: history-db-data
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - rtview-history-db
+      from:
+        kind: ImageStreamTag
+        name: rtview-history-db:latest
+    type: ImageChange
+status: {}

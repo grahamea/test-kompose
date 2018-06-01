@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --provider openshift --file ..\docker-compose.yml
+    kompose.version: 1.13.0 (84fa826)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rtview-config-db
+  name: rtview-config-db
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: rtview-config-db
+  strategy:
+    resources: {}
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: rtview-config-db
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: RTVCONFIG
+        - name: MYSQL_PASSWORD
+          value: my-secret-pw
+        - name: MYSQL_ROOT_PASSWORD
+          value: my-secret-pw
+        - name: MYSQL_USER
+          value: mysql
+        image: ' '
+        name: rtview-config-db
+        ports:
+        - containerPort: 3306
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: config-db-data
+      restartPolicy: Always
+      volumes:
+      - name: config-db-data
+        persistentVolumeClaim:
+          claimName: config-db-data
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - rtview-config-db
+      from:
+        kind: ImageStreamTag
+        name: rtview-config-db:latest
+    type: ImageChange
+status: {}

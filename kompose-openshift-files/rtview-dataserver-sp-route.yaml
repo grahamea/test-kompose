@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Route
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rtview-dataserver-sp
+  name: rtview-dataserver-sp
+spec:
+  host: ""
+  port:
+    targetPort: 3270
+  to:
+    kind: Service
+    name: rtview-dataserver-sp
+    weight: null
+status:
+  ingress: null
